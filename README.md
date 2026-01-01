@@ -3,19 +3,19 @@
 <table align="center">
   <tr>
     <td align="center">
-      <img src="images/entropy_ODE_flow.gif" width="120" /><br/>
+      <img src="images/linear_proba_path/gifs/entropy_ODE_flow.gif" width="120" /><br/>
       <sub><b>Flow Matching (ODE)</b></sub>
     </td>
     <td align="center">
-      <img src="images/entropy_SDE_flow.gif" width="120" /><br/>
+      <img src="images/linear_proba_path/gifs/entropy_SDE_flow.gif" width="120" /><br/>
       <sub><b>Flow Matching (SDE)</b></sub>
     </td>
     <td align="center">
-      <img src="images/entropy_SDE_flow_score.gif" width="120" /><br/>
+      <img src="images/linear_proba_path/gifs/entropy_SDE_flow_score.gif" width="120" /><br/>
       <sub><b>Flow + Score Matching (SDE)</b></sub>
     </td>
     <td align="center">
-      <img src="images/entropy_SDE_score.gif" width="120" /><br/>
+      <img src="images/linear_proba_path/gifs/entropy_SDE_score.gif" width="120" /><br/>
       <sub><b>Score Matching (SDE)</b></sub>
     </td>
   </tr>
