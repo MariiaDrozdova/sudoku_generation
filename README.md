@@ -1,4 +1,4 @@
-# Continuous Generative Models for Sudoku
+# Continuous-Time Generative Models for Sudoku: Unconditional Generation and Guided Solving
 
 <table align="center">
   <tr>
@@ -42,7 +42,8 @@ a **sampling problem** from a learned continuous distribution.
 
 The goal of this work is not efficiency or optimal solving, but to investigate whether
 continuous-time generative models can assign **non-zero probability mass** to valid Sudoku
-configurations and how different sampling regimes behave under strong global constraints.
+configurations, and how different probability paths and sampling regimes behave under
+strong global constraints.
 
 ---
 
@@ -60,10 +61,15 @@ and explore multiple learning and sampling strategies derived from this formulat
 - **Score matching (SDE sampling)**
 - **Hybrid flow + score SDEs**
 - **Discrete diffusion samplers (DDPM / DDIM)**
-- **Custom SDE samplers using $\beta(t)$ as diffusion strength**
+- **Custom SDE samplers using $\beta(t)$ as diffusion coefficient**
 
 Both **linear** and **cosine** schedules for $(\alpha,\beta)$ are considered, allowing direct
 comparison between continuous-time SDE samplers and discrete diffusion models.
+
+A key empirical finding of this project is that using the path-dependent coefficient
+$\beta(t)$ directly as the diffusion strength in SDE sampling, rather than a constant
+$\sigma$, leads to substantially improved stability and success rates, despite not
+corresponding to a classical diffusion forward process for linear paths.
 
 ---
 
@@ -79,6 +85,9 @@ Key components include:
 
 This approach allows solving difficult Sudoku instances through repeated probabilistic sampling,
 demonstrating the flexibility of continuous generative models in structured domains.
+Importantly, this solver operates entirely through probabilistic sampling and early stopping,
+without any explicit symbolic reasoning or search, relying solely on the learned geometry of
+the solution manifold.
 
 ---
 
@@ -112,9 +121,8 @@ PyTorch and scientific Python libraries.
 - Discrete DDPM/DDIM samplers underperform continuous SDEs in this highly constrained setting.
 
 Importantly, for the **Sudoku solving task with given constraints**, the most effective configuration
-in our experiments is a **score-based SDE with a linear Gaussian path and $\beta(t)$ used as the diffusion coefficient**.
-This setting provides a favorable balance between stochastic exploration and constraint preservation
-during guided sampling.
+in our experiments is a **score-based SDE with a linear Gaussian path and $\beta(t)$ used as the diffusion coefficient**,
+which consistently balances stochastic exploration with constraint preservation.
 
 All successful regimes demonstrate **non-zero probability mass** on valid Sudoku grids.
 
