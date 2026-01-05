@@ -51,9 +51,7 @@ strong global constraints.
 
 We study a unified Gaussian probability path framework of the form
 
-\[
-x_t = \alpha(t) x_0 + \beta(t)\varepsilon, \qquad \varepsilon \sim \mathcal{N}(0,I),
-\]
+$$x_t = \alpha(t) x_0 + \beta(t)\varepsilon, \qquad \varepsilon \sim \mathcal{N}(0,I),$$
 
 and explore multiple learning and sampling strategies derived from this formulation:
 
