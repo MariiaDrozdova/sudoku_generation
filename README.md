@@ -100,10 +100,10 @@ The project is organized into four fully standalone notebooks:
   Cosine paths, DDPM/DDIM discretizations, and comparison to continuous SDE samplers.
 
 - **03_linear_path_sudoku_solver_trainer.ipynb**  
-  Training of score and flow models used for Sudoku solving.
+  Training of the score model used for Sudoku solving + inference.
 
 - **04_linear_path_sudoku_solver.ipynb**  
-  Guided reverse SDE sampling for solving given Sudoku puzzles.
+  Inference for solving given Sudoku puzzles (no need to download the dataset, you can you the weights provided in the repo).
 
 Each notebook can be run independently without external dependencies beyond standard
 PyTorch and scientific Python libraries.
