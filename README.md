@@ -21,7 +21,7 @@
   </tr>
 </table>
 
-This repository contains a small personal research project inspired by the MIT course **Generative AI with Stochastic Differential Equations (6.S184)** by Peter Holderrieth and Ezra Erives.
+This repository contains a personal research project inspired by the MIT course **Generative AI with Stochastic Differential Equations (6.S184)** by Peter Holderrieth and Ezra Erives.
 
 Course website: https://diffusion.csail.mit.edu/
 
@@ -32,48 +32,58 @@ is included directly in this repository.
 
 ## Overview
 
-This project explores the use of **continuous generative models**-including flow matching,
-score matching, and diffusion-inspired samplers. Our goal is to generate and solve **Sudoku puzzles**.
+This project studies whether **standard continuous-time generative models**
+can represent and explore distributions whose support is an extremely sparse,
+globally constrained discrete set.
 
-Sudoku serves as a challenging testbed due to its highly structured, discrete nature:
-valid solutions form an extremely sparse subset of the continuous relaxation space.
-Rather than framing Sudoku as a search or constraint satisfaction problem, we treat it as
-a **sampling problem** from a learned continuous distribution.
+We use **Sudoku** as a controlled testbed. Valid completed Sudoku grids form a
+vanishingly small subset of a continuous relaxation space, and “almost correct”
+solutions are meaningless because validity requires simultaneously satisfying
+row, column, and subgrid constraints.
 
-The goal of this work is not efficiency or optimal solving, but to investigate whether
-continuous-time generative models can assign **non-zero probability mass** to valid Sudoku
-configurations, and how different probability paths and sampling regimes behave under
-strong global constraints.
+Rather than framing Sudoku as a search or symbolic reasoning problem, we treat
+it as a **sampling problem** from a learned continuous distribution. The goal is
+not efficiency or optimal solving performance, but to understand whether
+continuous-time generative models can assign **non-zero probability mass** to
+valid Sudoku configurations, and how different probability paths and sampling
+procedures behave under strong global constraints.
 
 ---
 
 ## Methods
 
-We study a unified Gaussian probability path framework of the form
+We study a unified Gaussian probability path of the form
 
-$$x_t = \alpha(t) x_0 + \beta(t)\varepsilon, \qquad \varepsilon \sim \mathcal{N}(0,I),$$
+$$
+x_t = \alpha(t) x_0 + \beta(t)\varepsilon, \qquad \varepsilon \sim \mathcal{N}(0,I),
+$$
 
-and explore multiple learning and sampling strategies derived from this formulation:
+and explore multiple learning and sampling strategies derived from this
+formulation:
 
-- **Flow matching (ODE sampling)**
-- **Score matching (SDE sampling)**
+- **Flow matching (deterministic ODE sampling)**
+- **Score matching (stochastic SDE sampling)**
 - **Hybrid flow + score SDEs**
 - **Discrete diffusion samplers (DDPM / DDIM)**
-- **Custom SDE samplers using $\beta(t)$ as diffusion coefficient**
+- **Empirical SDE variants with path-dependent diffusion**
 
-Both **linear** and **cosine** schedules for $(\alpha,\beta)$ are considered, allowing direct
-comparison between continuous-time SDE samplers and discrete diffusion models.
+Both **linear** and **cosine** schedules for \((\alpha,\beta)\) are considered.
+This allows direct comparison between continuous-time ODE/SDE samplers and
+discrete diffusion models derived from the same continuous-time training
+objective.
 
-A key empirical finding of this project is that using the path-dependent coefficient
-$\beta(t)$ directly as the diffusion strength in SDE sampling, rather than a constant
-$\sigma$, leads to substantially improved stability and success rates, despite not
-corresponding to a classical diffusion forward process for linear paths.
+An important empirical observation is that using the path-dependent coefficient
+\(\beta(t)\) as the diffusion strength in SDE sampling often improves numerical
+stability and success rates in constrained settings, despite deviating from
+probability-path–consistent diffusion dynamics. Such samplers are therefore
+interpreted as **guided stochastic search procedures**, rather than exact
+samplers of the target probability path.
 
 ---
 
 ## Constraint-Aware Sudoku Solving
 
-In addition to unconditional generation, the repository includes a **guided reverse-time SDE
+In addition to unconditional generation, the repository includes a **guided SDE
 solver** for Sudoku puzzles with given digits.
 
 Key components include:
@@ -91,7 +101,7 @@ the solution manifold.
 
 ## Notebooks
 
-The project is organized into four fully standalone notebooks:
+The project is organized into fully standalone notebooks:
 
 - **01_linear_path_sudoku_generation.ipynb**  
   Linear Gaussian paths, flow matching, score matching, and entropy analysis.
@@ -103,7 +113,11 @@ The project is organized into four fully standalone notebooks:
   Training of the score model used for Sudoku solving + inference.
 
 - **04_linear_path_sudoku_solver.ipynb**  
-  Inference for solving given Sudoku puzzles (no need to download the dataset, you can you the weights provided in the repo).
+  Inference for solving given Sudoku puzzles vie linear probability paths (no need to download the dataset, you can you the weights provided in the repo).
+
+- **05_ddpm_sudoku_solver.ipynb**  
+  Inference for solving given Sudoku puzzles vie DDPM sampling (no need to download the dataset, you can you the weights provided in the repo).
+  
 
 Each notebook can be run independently without external dependencies beyond standard
 PyTorch and scientific Python libraries.
@@ -112,29 +126,35 @@ PyTorch and scientific Python libraries.
 
 ## Key Findings (High-Level)
 
-- Stochastic SDE samplers consistently outperform deterministic ODE sampling.
-- Score-based SDEs achieve the highest unconditional success rates.
-- Using $\beta(t)$ as diffusion strength improves stability and robustness across settings.
-- Cosine schedules outperform linear schedules for *unconditional generation* and diffusion-style sampling.
-- Discrete DDPM/DDIM samplers underperform continuous SDEs in this highly constrained setting.
+- Deterministic ODE sampling consistently fails on Sudoku; stochasticity is essential.
+- Score-based SDE samplers substantially outperform flow-only models.
+- Discrete diffusion samplers (DDPM/DDIM) achieve the highest success rates for
+  **unconditional Sudoku generation**, exceeding all continuous-time variants.
+- Cosine probability paths are most effective for unconditional generation and
+  diffusion-style sampling.
+- Under hard constraints (Sudoku solving with given digits), the relative
+  performance landscape changes: linear probability paths combined with
+  score-based SDE sampling and annealed noise remain competitive, despite
+  deviating from probability-path–consistent dynamics.
+- All successful regimes assign **non-zero probability mass** to valid Sudoku
+  grids.
 
-Importantly, for the **Sudoku solving task with given constraints**, the most effective configuration
-in our experiments is a **score-based SDE with a linear Gaussian path and $\beta(t)$ used as the diffusion coefficient**,
-which consistently balances stochastic exploration with constraint preservation.
-
-All successful regimes demonstrate **non-zero probability mass** on valid Sudoku grids.
+These results highlight a distinction between samplers optimized for faithful
+generation of the data distribution and those that are effective for stochastic
+exploration under hard constraints.
 
 ---
 
 ## Scope and Limitations
 
 This project is exploratory and research-oriented.
-It is **not** intended to compete with classical Sudoku solvers or symbolic methods.
+It is **not** intended to compete with classical Sudoku solvers or symbolic
+constraint satisfaction methods.
 
 The emphasis is on understanding:
 - how continuous generative models behave under strong combinatorial constraints,
-- how different sampling regimes affect convergence,
-- and where diffusion-style methods succeed or fail on discrete tasks.
+- how probability paths and sampling regimes affect convergence and stability,
+- and where diffusion-style methods succeed or fail on discrete structured tasks.
 
 ---
 
