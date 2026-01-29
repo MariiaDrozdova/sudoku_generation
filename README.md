@@ -67,13 +67,13 @@ formulation:
 - **Discrete diffusion samplers (DDPM / DDIM)**
 - **Empirical SDE variants with path-dependent diffusion**
 
-Both **linear** and **cosine** schedules for \((\alpha,\beta)\) are considered.
+Both **linear** and **cosine** schedules for ($\alpha$, $\beta$) are considered.
 This allows direct comparison between continuous-time ODE/SDE samplers and
 discrete diffusion models derived from the same continuous-time training
 objective.
 
 An important empirical observation is that using the path-dependent coefficient
-\(\beta(t)\) as the diffusion strength in SDE sampling often improves numerical
+$\beta(t)$ as the diffusion strength in SDE sampling often improves numerical
 stability and success rates in constrained settings, despite deviating from
 probability-path–consistent diffusion dynamics. Such samplers are therefore
 interpreted as **guided stochastic search procedures**, rather than exact
