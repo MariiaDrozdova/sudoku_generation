@@ -1,4 +1,4 @@
-# Continuous-Time Generative Models for Sudoku: Unconditional Generation and Guided Solving
+# Can Continuous-Time Diffusion Models Generate and Solve Globally Constrained Discrete Problems? A Study on Sudoku
 
 <table align="center">
   <tr>
@@ -25,8 +25,7 @@ This repository contains a personal research project inspired by the MIT course 
 
 Course website: https://diffusion.csail.mit.edu/
 
-A full technical report (PDF) with theoretical background, methodology, and detailed analysis
-is included directly in this repository.
+A full technical report (PDF), including theoretical background, methodology, and detailed analysis, is available on arXiv: https://arxiv.org/abs/2601.20363
 
 ---
 
